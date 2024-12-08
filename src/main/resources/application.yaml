@@ -1,0 +1,27 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      default: # 추후 설정할 서킷브레이커의 이름
+        registerHealthIndicator: true
+        automaticTransitionFromOpenToHalfOpenEnabled: false # OPEN에서 HALF OPEN으로 자동 변환 여부 설정
+        failureRateThreshold: 1f # 실패율 임계값
+        minimumNumberOfCalls: 1 # 실패율 또는 느린 호출율을 계산하기에 필요한 최소 호출 수
+        permittedNumberOfCallsInHalfOpenState: 2 # HALF OPEN상태에서 허용할 요청 수
+        slidingWindowSize: 1 # 슬라이딩 윈도우의 크기
+        waitDurationInOpenState: 10000 # OPEN에서 HALF OPEN으로 변하기 까지 걸리는 시간
+        slidingWindowType: COUNT_BASED # 호출 결과를 기록할 슬라이딩 윈도우의 타입 설정
+# 서킷브레이커의 상태를 확인하기 위한 actuator 설정 추가
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+spring:
+  application:
+    name: circuitbraker
